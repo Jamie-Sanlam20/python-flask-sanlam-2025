@@ -1,6 +1,7 @@
 from os import remove
+from pprint import pprint
 
-from flask import Flask
+from flask import Flask, request
 
 app = Flask(__name__)
 
@@ -148,6 +149,35 @@ def delete_movie_by_id(id):
 # create --> post
 # post to body (in postman)
 # create id from backend
+
+
+# @ - decorator - higher order function
+@app.post("/movies")
+def create_movie():
+    new_movie = request.get_json()  # body
+    pprint(new_movie)
+    ids = [int(movie["id"]) for movie in movies]  # List of ids (convert to int)
+    new_movie["id"] = str(max(ids) + 1)  # max + 1
+    movies.append(new_movie)  # append to movies list
+    return {"message": "Movie created successfully", "data": new_movie}
+
+
+# put is a combination of get and post
+# update method on dict
+
+
+@app.put("/movies/<id>")
+def update_movie_by_id(id):
+    body = request.get_json()  # getting data from body (update)
+    # pprint(body)
+    # print(id)
+    for movie in movies:
+        if movie["id"] == id:  # match id from url to movie id
+            movie.update(body)  # update dict
+            return {"message": "Movie successfully updated", "data": movie}
+    # if movie id is not found - return statement will print
+    return {"message": "Movie not found"}, HTTP_NOT_FOUND
+
 
 if __name__ == "__main__":
     app.run(debug=True)
