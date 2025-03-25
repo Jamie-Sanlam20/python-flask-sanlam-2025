@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 
 app = Flask(__name__)
 
@@ -12,9 +12,21 @@ def hello_world():
     return "<h1>Super, Cool 😁</h1>"
 
 
-# to re-stablish connection: Ctrl + C -> closes connection
-# flask --app main run
-# if you switch Debug on, it will automatically save (restart app)
+name = "Jamie"
+hobbies = ["Gaming", "Reading", "Soccer", "Ballet", "Gyming", "Yoga"]
+
+# Flask uses Jinja2 -> looks for name in HTML and replaces {{}} with python value
+
+
+@app.get("/about")
+def about_page():
+    return render_template(
+        "about.html", name=name, hobbies=hobbies
+    )  # by default, flask will look at templates folder
+
+
+# we want to make HTML more dynamic (changes Sanlam -> someone's name)
+# name = name -> treated as keyword argument
 
 # Flask - Blueprints
 # connect movies_bp.py and main (postman only reads main file)
@@ -29,6 +41,10 @@ app.register_blueprint(
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+# to re-stablish connection: Ctrl + C -> closes connection
+# flask --app main run
+# if you switch Debug on, it will automatically save (restart app)
 
 # python .\main.py -> restart flask connection
 
