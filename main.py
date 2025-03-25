@@ -1,3 +1,5 @@
+from os import remove
+
 from flask import Flask
 
 app = Flask(__name__)
@@ -126,6 +128,26 @@ def get_movie_by_id(id):
     # if movie id is not found - return statement will print
     return {"message": "Movie not found"}, HTTP_NOT_FOUND  # returning a tuple
 
+
+# temporary delete: restart server and it will come back
+
+
+@app.delete("/movies/<id>")
+def delete_movie_by_id(id):
+    for movie in movies:
+        if movie["id"] == id:
+            movies.remove(movie)
+            return {
+                "message": "Movie deleted successfully",
+                "data": movie,
+            }  # send message + movie data
+    # if movie id is not found - return statement will print
+    return {"message": "Movie not found"}, HTTP_NOT_FOUND  # returning a tuple
+
+
+# create --> post
+# post to body (in postman)
+# create id from backend
 
 if __name__ == "__main__":
     app.run(debug=True)
