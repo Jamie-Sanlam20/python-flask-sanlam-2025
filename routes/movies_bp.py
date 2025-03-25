@@ -110,7 +110,7 @@ def get_all_movies():
 
 
 # /movies -> movies
-@movies_bp.get("/<id>")
+@movies_bp.get("/<id>")  # changed from "/movies/<id>"
 def get_movie_by_id(id):
     for movie in movies:
         if movie["id"] == id:
@@ -141,7 +141,7 @@ def delete_movie_by_id(id):
 
 
 # @ - decorator - higher order function
-@movies_bp.post("/")
+@movies_bp.post("/")  # changed from "/movies"
 def create_movie():
     new_movie = request.get_json()  # body
     pprint(new_movie)
