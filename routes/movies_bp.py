@@ -104,13 +104,13 @@ movies_bp = Blueprint("movies_bp", __name__)  # to replace app with movies_bp
 
 
 # flask -> Auto converts data (list -> JSON)
-@movies_bp.get("/movies")  # changed from @app to @movies_bp
+@movies_bp.get("/")  # changed from @app to @movies_bp
 def get_all_movies():
     return movies
 
 
 # /movies -> movies
-@movies_bp.get("/movies/<id>")
+@movies_bp.get("/<id>")
 def get_movie_by_id(id):
     for movie in movies:
         if movie["id"] == id:
@@ -122,7 +122,7 @@ def get_movie_by_id(id):
 # temporary delete: restart server and it will come back
 
 
-@movies_bp.delete("/movies/<id>")
+@movies_bp.delete("/<id>")
 def delete_movie_by_id(id):
     for movie in movies:
         if movie["id"] == id:
@@ -141,7 +141,7 @@ def delete_movie_by_id(id):
 
 
 # @ - decorator - higher order function
-@movies_bp.post("/movies")
+@movies_bp.post("/")
 def create_movie():
     new_movie = request.get_json()  # body
     pprint(new_movie)
@@ -155,7 +155,7 @@ def create_movie():
 # update method on dict
 
 
-@movies_bp.put("/movies/<id>")
+@movies_bp.put("/<id>")
 def update_movie_by_id(id):
     body = request.get_json()  # getting data from body (update)
     # pprint(body)

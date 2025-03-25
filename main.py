@@ -22,8 +22,10 @@ def hello_world():
 # connection:
 from routes.movies_bp import movies_bp  # folder name + file name
 
-app.register_blueprint(movies_bp)
-
+app.register_blueprint(
+    movies_bp, url_prefix="/movies"
+)  # don't have to repeat in methods url
+# prefix -> Refactor -> maintainability ⬆️ (change in one place)
 
 if __name__ == "__main__":
     app.run(debug=True)
