@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        font-family: Roboto, sans-serif;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        /*display: flex;
+        flex-wrap: wrap;
+        gap: 20px;*/
+        justify-content: space-evenly;
+      }
+
+      .headline {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .image {
+        border-radius: 20px;
+        height: 300px;
+        width: 225px;
+      }
+
+      .cards {
+        width: 225px;
+        margin-bottom: 32px;
+      }
+
+      .summary {
+        margin-top: 0px;
+        color: gray;
+      }
+
+      .title {
+        width: 130px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- <div class="cards">
+      <div class="image">
+        <img
+          class="image"
+          src="https://m.media-amazon.com/images/M/MV5BMmJhYTYxMGEtNjQ5NS00MWZiLWEwN2ItYjJmMWE2YTU1YWYxXkEyXkFqcGdeQXVyMTEzNzg0Mjkx._V1_.jpg"
+        />
+      </div>
+      <div class="text">
+        <div class="headline">
+          <h3 class="title">Vikram</h3>
+          <h3 class="rating">⭐ 8.4</h3>
+        </div>
+        <p class="summary">
+          Members of a black ops team must track and eliminate a gang of masked
+          murderers.
+        </p>
+      </div>
+    </div> -->
+
+    {% for movie in movies %}
+    <div class="cards">
+      <div class="image">
+        <img class="image" src="{{movie.poster}}" />
+      </div>
+      <div class="text">
+        <div class="headline">
+          <h3 class="title">{{movie.name}}</h3>
+          <h3 class="rating">⭐ {{movie.rating}}</h3>
+        </div>
+        <p class="summary">{{movie.summary}}</p>
+      </div>
+    </div>
+    {% endfor %}
+  </body>
+</html>
