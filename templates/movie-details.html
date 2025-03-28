@@ -1,0 +1,81 @@
+{% extends "base.html" %} {% block head_content %}
+
+<style>
+  .movie-card {
+    width: 100%;
+  }
+
+  .movie-heading {
+    display: flex;
+    justify-content: space-between;
+    width: 640px;
+    margin-left: 32px;
+  }
+</style>
+
+{% endblock %} {% block content %}
+
+<div>
+  <div class="movie-card">
+    <iframe
+      width="640"
+      height="360"
+      src="{{movie.trailer}}"
+      frameborder="0"
+      allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
+    ></iframe>
+    <div class="movie-heading">
+      <h3>{{movie.name}}</h3>
+      <h3>⭐ {{movie.rating}}</h3>
+    </div>
+  </div>
+  <p>{{movie.summary}}</p>
+</div>
+
+{% endblock %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      body {
+        font-family: Roboto, sans-serif;
+      }
+
+      .movie-card {
+        width: 100%;
+      }
+
+      .movie-heading {
+        display: flex;
+        justify-content: space-between;
+        width: 640px;
+        margin-left: 32px;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <div class="movie-card">
+        <iframe
+          width="640"
+          height="360"
+          src="{{movie.trailer}}"
+          frameborder="0"
+          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+        <div class="movie-heading">
+          <h3>{{movie.name}}</h3>
+          <h3>⭐ {{movie.rating}}</h3>
+        </div>
+      </div>
+      <p>{{movie.summary}}</p>
+    </div>
+  </body>
+</html>

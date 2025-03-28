@@ -1,17 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
-      rel="stylesheet"
-    />
+{% extends "base.html" %}
+
+{% block head_content %}
+
     <style>
-      body {
-        font-family: Roboto, sans-serif;
-      }
 
       li {
         list-style: none;
@@ -34,8 +25,11 @@
         margin-bottom: 32px;
       }
     </style>
-  </head>
-  <body>
+
+{% endblock %}
+
+{% block content %}
+
     <ul>
       {% for profile in profiles %}
       <div class="profiles"></div>
@@ -45,5 +39,5 @@
       {% endfor %}
       </div>
     </ul>
-  </body>
-</html>
+
+{% endblock %}
