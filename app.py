@@ -3,6 +3,7 @@ from sqlalchemy.sql import text
 
 from config import Config
 from extensions import db
+from models.movie import Movie
 from routes.main_bp import main_bp  # connection: folder name + file name
 from routes.movies_bp import movies_bp
 from routes.movies_list_bp import movies_list_bp
@@ -20,6 +21,9 @@ def create_app():
             result = db.session.execute(
                 text("SELECT 1")
             ).fetchall()  # testing connection
+            # print(Movie.query.all())
+            # movies = Movie.query.all()
+            # print(movies[0].to_dict())
             print("Connection successful:", result)
         except Exception as e:
             print("Error connecting to the database:", e)

@@ -2,6 +2,10 @@ from pprint import pprint
 
 from flask import Blueprint, request
 
+from constants import STATUS_CODE
+from extensions import db
+from models.movie import Movie
+
 movies = [
     {
         "id": "99",
@@ -106,17 +110,30 @@ movies_bp = Blueprint("movies_bp", __name__)  # to replace app with movies_bp
 # flask -> Auto converts data (list -> JSON)
 @movies_bp.get("/")  # changed from @app to @movies_bp
 def get_all_movies():
-    return movies
+    movies = Movie.query.all()  # Select * from movies  -> python's version
+    # database -> class object
+    # print(movies[0].to_dict())
+    movies_dict = [
+        movie.to_dict() for movie in movies
+    ]  # converting each movie into dict
+    return movies_dict
 
 
 # /movies -> movies
 @movies_bp.get("/<id>")  # changed from "/movies/<id>"
 def get_movie_by_id(id):
-    for movie in movies:
-        if movie["id"] == id:
-            return movie
+    movie = Movie.query.get(id)  # None if no movie
+
+    if not movie:
+        return {"message": "Movie not found"}, HTTP_NOT_FOUND  # returning a tuple
+
+    data = movie.to_dict()
+    return data
+
+    # for movie in movies:
+    #     if movie["id"] == id:
+    #         return movie
     # if movie id is not found - return statement will print
-    return {"message": "Movie not found"}, HTTP_NOT_FOUND  # returning a tuple
 
 
 # temporary delete: restart server and it will come back
@@ -124,15 +141,28 @@ def get_movie_by_id(id):
 
 @movies_bp.delete("/<id>")
 def delete_movie_by_id(id):
-    for movie in movies:
-        if movie["id"] == id:
-            movies.remove(movie)
-            return {
-                "message": "Movie deleted successfully",
-                "data": movie,
-            }  # send message + movie data
-    # if movie id is not found - return statement will print
-    return {"message": "Movie not found"}, HTTP_NOT_FOUND  # returning a tuple
+    movie = Movie.query.get(id)  # None if no movie
+
+    if not movie:
+        return {"message": "Movie not found"}, HTTP_NOT_FOUND  # returning a tuple
+
+    try:
+        data = movie.to_dict()
+        db.session.delete(movie)  # delete it from database class
+        db.session.commit()  # only permanent with commit # Making any changes (Update/Delete/Create) # Error
+        return {"message": "Movie deleted successfully", "data": data}
+    except Exception as e:
+        db.session.rollback()  # Undo: Restore data | After commit - cannot undo # Only works if commit was unsuccesful
+        return {
+            "message": str(e)
+        }, 500  # returns error message (what happened) | 500 is server side error
+
+    # for movie in movies:
+    #     if movie["id"] == id:
+    #         movies.remove(movie)
+    #           # send message + movie data
+    # # if movie id is not found - return statement will print
+    # return {"message": "Movie not found"}, HTTP_NOT_FOUND  # returning a tuple
 
 
 # create --> post
@@ -143,12 +173,39 @@ def delete_movie_by_id(id):
 # @ - decorator - higher order function
 @movies_bp.post("/")  # changed from "/movies"
 def create_movie():
-    new_movie = request.get_json()  # body
-    pprint(new_movie)
-    ids = [int(movie["id"]) for movie in movies]  # List of ids (convert to int)
-    new_movie["id"] = str(max(ids) + 1)  # max + 1
-    movies.append(new_movie)  # append to movies list
-    return {"message": "Movie created successfully", "data": new_movie}
+    data = request.get_json()
+    # new_movie = Movie(
+    #     name=data["name"],
+    #     poster=data["poster"],
+    #     rating=data["rating"],
+    #     summary=data["summary"],
+    #     trailer=data["trailer"],
+    # )
+    # postman is receiving data['name'] -> must match db class names
+    # not passing in id - id will be generated randomly
+
+    new_movie = Movie(**data)  # can be unpacked
+
+    try:
+        # print(new_movie, new_movie.to_dict())
+        db.session.add(
+            new_movie
+        )  # adding new movie -> adding a random id to the new movie
+        db.session.commit()
+        return {
+            "message": "Movie created successfully",
+            "data": new_movie.to_dict(),
+        }, 201  # 200 = OK, 201 = CREATED
+    except Exception as e:
+        db.session.rollback()  # Undo: Restore the data | After commit cannot undo
+        return {"message": str(e)}, 500
+
+    # new_movie = request.get_json()  # body
+    # pprint(new_movie)
+    # ids = [int(movie["id"]) for movie in movies]  # List of ids (convert to int)
+    # new_movie["id"] = str(max(ids) + 1)  # max + 1
+    # movies.append(new_movie)  # append to movies list
+    # return {"message": "Movie created successfully", "data": new_movie}
 
 
 # put is a combination of get and post
